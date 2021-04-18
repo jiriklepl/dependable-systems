@@ -1,0 +1,161 @@
+\chapter{Introduction}
+\label{ch:intro}
+
+This Software Requirements Specification (SRS) document describes the requirements of a
+Line Follower Challenge Robot. The SRS begins with an introductory section
+describing its overall purpose, scope, and defining terms and acronyms that will be utilized
+therein. The following section will describe the software product in detail, including functions,
+constraints, and user characteristics. Then, a detailed list of requirements will be provided, after
+which those requirements will be modeled using a domain model, data dictionaries, use case
+diagrams, sequence diagrams and system state diagrams. In the final three sections, a product
+prototype is described, references for this document are listed, and a point of contact for the
+project is provided.
+
+\section{Purpose}
+
+The purpose of this document is to specify the means of achievement of victory in the Line Follower Challenge.
+
+\section{Scope}
+
+The software described in this SRS document is a control system for the Line Follower Challenge Robot DD48879 (CSR/DD48879). It is designed as an embedded system to be used in the Line Follower Challenge.
+The major goals of the system are to achieve victory in the Line Follower Challenge.
+The CSR/DD48879 system will attempt to follow the line at the maximum speed maintainable by the device. The system can use a combination of sensors and camera to detect the line and is able to adjust its own speed via Kobuki motors.
+
+\section{References}
+
+\begin{enumerate}
+    \item \label{rules} Robotic Day, ``Line Follower: The robot follows black line on the track as fast as possible'', 2016
+    \item \label{guide} Kobuki Team, ``Kobuki User Guide'', 2016
+\end{enumerate}
+
+
+\chapter{Overall Description}
+\label{Overall Description}
+
+
+
+\section{Stakeholders and their goals and needs}
+
+\begin{enumerate}
+    \item \label{d3s} \textbf{Investors}: Investors from the \textit{Department of Distributed and Dependable Systems, Faculty of Mathematics and Physics, Charles University} want to win the competition as a part of their marketing strategy, their satisfaction is dependent solely on the achievement of victory
+    \item \label{organizers} \textbf{Competition organizers}: They want to promote robotics among general public via creating highly competitive challenges. At the same time, one of their main concerns is safety of all competitors, spectators and organizers present during the competition. They will be satisfied by a highly performant and safe system.
+\end{enumerate}
+
+\section{Operating Environment}
+
+The operating environment is the place of the competition. After previous iterations of the challenge, it is expected to resemble a table with lines drawn on top of it. The robots participating in the challenge are expected to stay on the table without exiting the area close to the line. The robots are required to be completely autonomous during the challenge without receiving any information from outside sources.
+
+\section{Constraints}
+
+There are multiple constraints defined by the rules of the Line Follower Challenge (see the rules [\ref{rules}]). Here we will list the most important ones when making design decisions about the system.
+
+\begin{itemize}
+    \item The objective of the challenge is to finish each run as fast as possible
+    \item The robot shall be completely autonomous
+\end{itemize}
+
+\section{Assumptions and references}
+
+\begin{itemize}
+    \item The challenge will not be excessively long or it will be with a supply of power for the robot and its system
+\end{itemize}
+
+\newpage
+
+
+
+
+\chapter{Requirements}
+\label{Requirements}
+
+\section{Functional Requirements}
+
+\def\srs#1#2#3#4#5{\item\textbf{SRS\_#1: #2}
+
+\textit{Description}: #3
+
+\textit{Rationale}: #4
+
+\textit{Dependencies}: #5}
+
+
+\begin{itemize}
+    \srs{003}
+        {The robot has to respond to cliff sensor events in time}
+        {Falling of the table is strongly prohibited by multiple of the rules and means we will not be able to continue in the challenge and to ensure the robot does not fall of the table it has to respond to cliff sensors quickly.}
+        {This is a rule of the Line Follower Challenge [\ref{rules}] and a requirement of one of our stakeholders (D3S [\ref{d3s}]),
+        whose marketing consultant expressed concerns that falling off the table would have negative impact on the good name of the Department.}
+        {SRS\_004}
+
+        \srs{004}
+        {Employ a realtime system}
+        {The CSR/DD48879 control system must be able to respond to any input within a specified deadline, otherwise the robot will be not able to control its movement if the speed is too high. See the guide [\ref{guide}] for further information on the robot's movement.}
+        {We need to have full control over the movements of the robot at all times in order to satisfy SRS\_001 and SRS\_003.}
+        {SRS\_051, SRS\_404}
+
+        \srs{008}
+        {If the robot encounters an cutoff on the way it has to find the continuation of the line}
+        {The challenge consists of line-following with multiple obstacles that can be encountered by the robot, this is one of the obstacles.}
+        {One of the rules of the the Line Follower Challenge is that the robot must not leave the path given by the line it follows. See the rules [\ref{rules}] for further information.}
+        {SRS\_011}
+
+        \srs{010}
+        {The robot must not shorten its way thanks to a line loss}
+        {If the robot loses the line, it must return to the line so that it does not shorten its way thanks to the line loss.}
+        {This is a rule of the Line Follower Challenge (sect. 1, ln. 4). see the rules [\ref{rules}].}
+        {SRS\_011}
+
+        \srs{011}
+        {Recover from line loss by spiraling}
+        {When the robot loses track of the line, it should search for it by spiraling.}
+        {This allows the robot to find the path regardless of the reason for which it lost the line:
+        If it was due to failure of a sensor, the line is found again after doing approximately one circle,
+        not shortening its path and thus satisfying SRS\_010. If on the other hand the line actually ended,
+        the robot finds it as soon as it continues, satisfying SRS\_008.}
+        {SRS\_336, SRS\_337, SRS\_338}
+
+        \srs{420}
+        {The robot must not be excessively annoying}
+        {The adjective {\it annoying} is defined by Wiktionary as ``Causing irritation or annoyance; troublesome; vexatious.''.}
+        {This is a rule of the Line Follower Challenge (sect. 2). See the rules [\ref{rules}] for further information.}
+        {SRS\_422, SRS\_423}
+
+        \srs{421}
+        {The robot should report its state}
+        {If the robot loses the line, it must return to the line so that it does not shorten its way thanks to the line loss.}
+        {This is an expectation of the stakeholders. It will also provide useful information during the development of the CSR/DD48879 control system.}
+        {SRS\_422}
+
+        \srs{422}
+        {The robot should use LEDs to report its state}
+        {There should be two RGB LEDs to cover the full state space of the control system (9 states including ).}
+        {This is the only option that satisfies SRS\_420, SRS\_421, and especially SRS\_799.}
+        {SRS\_983}
+
+\end{itemize}
+
+\section{Non Functional Requirements}
+
+\begin{itemize}
+        \srs{501}
+        {The robot and its systems should not be excessively expensive}
+        {If the robot is excessively expensive, the investors from D3S [\ref{d3s}] will be motivated to consider different marketing strategies.}
+        {This requirement is inspired by the limited resources of D3S allocated for marketing purposes.}
+        {}
+
+        \srs{513}
+        {The development of the software should be under a open-source license}
+        {Open software is, among academic societies, highly regarded as the best way to develop any software.}
+        {The investors from D3S [\ref{d3s}] have built up a good company name and they would be unmotivated towards future projects with us if we put their name in any danger.}
+        {}
+
+\end{itemize}
+
+
+% \begin{appendices}
+% \chapter{Glossary}
+
+
+% \end{appendices}
+
+
