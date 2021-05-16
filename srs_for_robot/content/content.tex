@@ -26,13 +26,11 @@ The CSR/DD48879 system will attempt to follow the line at the maximum speed main
 \begin{enumerate}
     \item \label{rules} Robotic Day, ``Line Follower: The robot follows black line on the track as fast as possible'', 2016
     \item \label{guide} Kobuki Team, ``Kobuki User Guide'', 2016
+    \item \label{disability} Dodger67 et al, Physical disability, 2021, available online:\\ https://en.wikipedia.org/wiki/Physical\_disability
 \end{enumerate}
-
 
 \chapter{Overall Description}
 \label{Overall Description}
-
-
 
 \section{Stakeholders and their goals and needs}
 
@@ -63,93 +61,146 @@ There are multiple constraints defined by the rules of the Line Follower Challen
 \newpage
 
 
-
-
-\chapter{Requirements}
+\chapter{Software validation testing specification design}
 \label{Requirements}
 
-\section{Functional Requirements}
+\section{General}
 
-\def\srs#1#2#3#4#5{\item\textbf{SRS\_#1: #2}
+The specification of the testing design follows the Software Requirements Specification which should be delivered either with this document or in precedence of this document to each of the addressees of this document.
 
-\textit{Description}: #3
+\section{Test designs}
 
-\textit{Rationale}: #4
 
-\textit{Dependencies}: #5}
+\def\srs#1#2#3#4#5{\item\textbf{Test design \textit{#1}}
 
+\textbf{General}:
+
+This test design establishes procedures for the validation on the #3 as specified in the Software Requirements Specification (as \textbf{SRS\_#2}).
+
+\textbf{Features to be tested}:
+
+This test design will test the following features: #4
+
+\textbf{Approach refinements}:
+
+#5
+
+}
 
 \begin{itemize}
-    \srs{003}
-        {The robot has to respond to cliff sensor events in time}
-        {Falling of the table is strongly prohibited by multiple of the rules and means we will not be able to continue in the challenge and to ensure the robot does not fall of the table it has to respond to cliff sensors quickly.}
-        {This is a rule of the Line Follower Challenge [\ref{rules}] and a requirement of one of our stakeholders (D3S [\ref{d3s}]),
-        whose marketing consultant expressed concerns that falling off the table would have negative impact on the good name of the Department.}
-        {SRS\_004}
+    \srs{STOP-BUTTON}{001}
+        {stop button functionality}
+        {
+            \begin{itemize}
+                \item Stop button presence
+                \item Stop button accessibility
+                \item Stop button response
+                \item Stop button response dependability
+                \item Stop button response time
+            \end{itemize}
+        }
+        {
+            \begin{itemize}
+                \item STOP-BUTTON-01 \quad Visually verify the presence of the stop button, and verify it is located on top side of the robot.
+                \item STOP-BUTTON-02 \quad Attempt to press the button on a powered-off robot. Verify it is easily accessible even to a physically disabled person (as defined by [\ref{disability}]).
+                \item STOP-BUTTON-03 \quad Try pressing the button on a powered-on robot under each of the following conditions:
+                    \begin{itemize}
+                        \item The robot is located on the start line but it has not yet received any start signal
+                        \item The robot is following the line
+                        \item The robot lost the line and it is spiraling
+                        \item The robot is rounding an Object
+                    \end{itemize}
+                    Verify the robot stops all movement within 100ms and it does not start until given a new start signal.
+                \item STOP-BUTTON-04 \quad Try pressing the button on a powered-on robot under each of the following potentially unanticipated conditions:
+                \begin{itemize}
+                    \item The robot is placed on a chessboard
+                    \item The robot is placed on a glass table
+                    \item The robot is placed on a monochromatic table with no lines
+                    \item The robot fell off a table placed at 1000 mm to 1100 mm height
+                \end{itemize}
+                Verify that the robot's response does not differ from the response in the test STOP-BUTTON-03
+                \item STOP-BUTTON-05 \quad Repeat each of the tests STOP-BUTTON-03 and STOP-BUTTON-04 7 times.
+            \end{itemize}
+        }
 
-        \srs{004}
-        {Employ a realtime system}
-        {The CSR/DD48879 control system must be able to respond to any input within a specified deadline, otherwise the robot will be not able to control its movement if the speed is too high. See the guide [\ref{guide}] for further information on the robot's movement.}
-        {We need to have full control over the movements of the robot at all times in order to satisfy SRS\_001 and SRS\_003.}
-        {SRS\_051, SRS\_404}
+    \srs{CALM}{420}
+        {non-annoyance of the robot}
+        {
+            \begin{itemize}
+                \item Objective visual annoyance
+                \item Objective aural annoyance
+                \item Subjective visual annoyance
+                \item Subjective aural annoyance
+                \item Subjective olfactory annoyance
+            \end{itemize}
+        }
+        {
+            \begin{itemize}
+                \item CALM-01 \quad Place the robot on a table from the previous iteration of the challenge and make it move randomly on top of it at its maximum speed. Take a recording from fixed position centered at the table within 2 meters and at least one meter higher than the surface of the table. The camera shall record in standard 720px/480px@60. Take another recording under the same conditions except the robot shall be covered under an opaque blanket. Verify the former at most 125\% of the latter.
+                \item CALM-02 \quad Measure the audio volume of the robot from the distance of at least 1m and at most 2m. Verify that the audio volume does not exceed 60dB.
+                \item CALM-03 \quad Ask 10 independent observers representative of the organizers and the audience of the challenge whether they consider the visual appearance of the robot annoying. Verify that at most one of the participants is annoyed by the robot's visual appearance.
+                \item CALM-04 \quad Ask 10 independent observers representative of the organizers and the audience of the challenge whether they consider the sound of the robot annoying. Verify that at most one of the participants is annoyed by the robot's sound.
+                \item CALM-05 \quad Ask 10 independent observers representative of the organizers and the audience of the challenge whether they consider the smell of the robot annoying. Verify that at most one of the participants is annoyed by the robot's smell.
+            \end{itemize}
+        }
 
-        \srs{008}
-        {If the robot encounters an cutoff on the way it has to find the continuation of the line}
-        {The challenge consists of line-following with multiple obstacles that can be encountered by the robot, this is one of the obstacles.}
-        {One of the rules of the the Line Follower Challenge is that the robot must not leave the path given by the line it follows. See the rules [\ref{rules}] for further information.}
-        {SRS\_011}
+    \srs{STATE-TRANSPARENCY}{421 \textnormal{and} SRS\_{422}}
+        {indication of the state and its unambiguity}
+        {
+            \begin{itemize}
+                \item Reporting when the robot is ready to start
+                \item Reporting when the robot is following the line
+                \item Reporting when the robot has lost the line
+                \item Reporting when the robot is rounding an Object
+                \item Reporting when the robot has reached the finish line
+                \item Reporting when the robot is manually stopped
+                \item Reporting when the robot has detected an internal error
+                \item Reporting when the robot has fallen off the table
+                \item Reporting when the robot has detected there is no valid path to the finish line
+            \end{itemize}
+        }
+        {
+            \begin{itemize}
+                \item STATE-TRANSPARENCY-01 \quad Verify the robot correctly reports when it is ready to start.
+                \item STATE-TRANSPARENCY-02 \quad Verify the robot correctly reports when it is following the line.
+                \item STATE-TRANSPARENCY-03 \quad Verify the robot correctly reports when it has lost the line.
+                \item STATE-TRANSPARENCY-04 \quad Verify the robot correctly reports when it is rounding an Object.
+                \item STATE-TRANSPARENCY-05 \quad Verify the robot correctly reports when it has reached the finish line.
+                \item STATE-TRANSPARENCY-06 \quad Verify the robot correctly reports when it is manually stopped.
+                \item STATE-TRANSPARENCY-07 \quad Verify the robot correctly reports when it has detected an internal error.
+                \item STATE-TRANSPARENCY-08 \quad Verify the robot correctly reports when it has fallen off the table.
+                \item STATE-TRANSPARENCY-09 \quad Verify the robot correctly reports when it has detected there is no valid path to the finish line.
+            \end{itemize}
+        }
 
-        \srs{010}
-        {The robot must not shorten its way thanks to a line loss}
-        {If the robot loses the line, it must return to the line so that it does not shorten its way thanks to the line loss.}
-        {This is a rule of the Line Follower Challenge (sect. 1, ln. 4). see the rules [\ref{rules}].}
-        {SRS\_011}
-
-        \srs{011}
-        {Recover from line loss by spiraling}
-        {When the robot loses track of the line, it should search for it by spiraling.}
-        {This allows the robot to find the path regardless of the reason for which it lost the line:
-        If it was due to failure of a sensor, the line is found again after doing approximately one circle,
-        not shortening its path and thus satisfying SRS\_010. If on the other hand the line actually ended,
-        the robot finds it as soon as it continues, satisfying SRS\_008.}
-        {SRS\_336, SRS\_337, SRS\_338}
-
-        \srs{420}
-        {The robot must not be excessively annoying}
-        {The adjective {\it annoying} is defined by Wiktionary as ``Causing irritation or annoyance; troublesome; vexatious.''.}
-        {This is a rule of the Line Follower Challenge (sect. 2). See the rules [\ref{rules}] for further information.}
-        {SRS\_422, SRS\_423}
-
-        \srs{421}
-        {The robot should report its state}
-        {If the robot loses the line, it must return to the line so that it does not shorten its way thanks to the line loss.}
-        {This is an expectation of the stakeholders. It will also provide useful information during the development of the CSR/DD48879 control system.}
-        {SRS\_422}
-
-        \srs{422}
-        {The robot should use LEDs to report its state}
-        {There should be two RGB LEDs to cover the full state space of the control system (9 states including ).}
-        {This is the only option that satisfies SRS\_420, SRS\_421, and especially SRS\_799.}
-        {SRS\_983}
-
+    \srs{CLIFF-SENSOR-REACTION}{003}
+        {reliability of the cliff sensors and the robot's reaction to their triggerment}
+        {
+            \begin{itemize}
+                \item Reliability of the cliff sensors
+                \item Robot's reaction to the triggerment of the cliff sensors
+            \end{itemize}
+        }
+        {
+            \item CLIFF-SENSOR-REACTION-01 \quad Test the robot in each of the following conditions:
+            \begin{itemize}
+                \item The robot is following the line which leads to the edge of the table
+                \item The robot lost the line and it is spiraling 10 cm from the edge of the table
+                \item The robot is rounding an Object centered on the edge of the table
+            \end{itemize}
+            Visually verify that the robot has not fallen of the table.
+            \item CLIFF-SENSOR-REACTION-02 \quad Test the robot in each of the following potentially unanticipated conditions:
+            \begin{itemize}
+                \item The robot is placed on a chessboard table
+                \item The robot is placed on a glass table
+                \item The robot is placed on a monochromatic table with no lines
+            \end{itemize}
+            Visually verify that the robot has not fallen of the table.
+        }
 \end{itemize}
 
 \section{Non Functional Requirements}
-
-\begin{itemize}
-        \srs{501}
-        {The robot and its systems should not be excessively expensive}
-        {If the robot is excessively expensive, the investors from D3S [\ref{d3s}] will be motivated to consider different marketing strategies.}
-        {This requirement is inspired by the limited resources of D3S allocated for marketing purposes.}
-        {}
-
-        \srs{513}
-        {The development of the software should be under a open-source license}
-        {Open software is, among academic societies, highly regarded as the best way to develop any software.}
-        {The investors from D3S [\ref{d3s}] have built up a good company name and they would be unmotivated towards future projects with us if we put their name in any danger.}
-        {}
-
-\end{itemize}
+\ref{rules}
 
 
 % \begin{appendices}
