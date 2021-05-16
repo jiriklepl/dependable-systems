@@ -1,65 +1,47 @@
 \chapter{Introduction}
 \label{ch:intro}
 
-This Software Requirements Specification (SRS) document describes the requirements of a
-Line Follower Challenge Robot. The SRS begins with an introductory section
-describing its overall purpose, scope, and defining terms and acronyms that will be utilized
-therein. The following section will describe the software product in detail, including functions,
-constraints, and user characteristics. Then, a detailed list of requirements will be provided, after
-which those requirements will be modeled using a domain model, data dictionaries, use case
-diagrams, sequence diagrams and system state diagrams. In the final three sections, a product
-prototype is described, references for this document are listed, and a point of contact for the
-project is provided.
+The purpose of this document is to describe the system testing, analysis, inspection and
+review of design specifications to be performed as part of the software validation plan for
+the Line Follower Challenge Robot DD48879 (CSR/DD48879).
+
+System tests verify that the software system meets the software requirements with primary
+purpose to fully exercise the complete system. If possible, tests must be executed by an
+independent team in a development and/or operational environment. Knowledge of the
+system is not needed, so system testing is essentially a black-box test.
+
+Hopefully, you do not read any further to discover that this introduction was copied almost
+verbatim from the Cluster Science Archive Software Validation Specification. That would be
+too bad for us, since it would then be obvious to you that we are just shameless plagiators.
+
+Test cases described in this document are mainly based on functional requirements. Non-
+functional requirements (e.g. interface, resource, reliability and safety tests) are out of the
+scope of the document with the exception of the performance, scalability and security tests,
+which have proven to be of key importance for any release of a science archive system.
+
+This document is fully compatible with the European Cooperation for Space
+Standardization (ECSS) (see [ECSS-E-ST-40C]), and it constitutes the Software Validation
+Specification (SVS) deliverable, which aims to validate process implementation and
+activities with respect to the technical specification and the requirements baseline.
+
 
 \section{Purpose}
 
-The purpose of this document is to specify the means of achievement of victory in the Line Follower Challenge.
-
-\section{Scope}
-
-The software described in this SRS document is a control system for the Line Follower Challenge Robot DD48879 (CSR/DD48879). It is designed as an embedded system to be used in the Line Follower Challenge.
-The major goals of the system are to achieve victory in the Line Follower Challenge.
-The CSR/DD48879 system will attempt to follow the line at the maximum speed maintainable by the device. The system can use a combination of sensors and camera to detect the line and is able to adjust its own speed via Kobuki motors.
+The purpose of this document is to describe the system testing, analysis, inspection and
+review of design specifications to be performed as part of the software validation plan for
+the Line Follower Challenge Robot DD48879 (CSR/DD48879), as said in the first chapter.
 
 \section{References}
 
 \begin{enumerate}
     \item \label{rules} Robotic Day, ``Line Follower: The robot follows black line on the track as fast as possible'', 2016
     \item \label{guide} Kobuki Team, ``Kobuki User Guide'', 2016
+    \item \label{guide} Klepl J.; Rozsypal L., ``Software Requirements Specification'', 2021
     \item \label{disability} Dodger67 et al, Physical disability, 2021, available online:\\ https://en.wikipedia.org/wiki/Physical\_disability
 \end{enumerate}
 
 \chapter{Overall Description}
 \label{Overall Description}
-
-\section{Stakeholders and their goals and needs}
-
-\begin{enumerate}
-    \item \label{d3s} \textbf{Investors}: Investors from the \textit{Department of Distributed and Dependable Systems, Faculty of Mathematics and Physics, Charles University} want to win the competition as a part of their marketing strategy, their satisfaction is dependent solely on the achievement of victory
-    \item \label{organizers} \textbf{Competition organizers}: They want to promote robotics among general public via creating highly competitive challenges. At the same time, one of their main concerns is safety of all competitors, spectators and organizers present during the competition. They will be satisfied by a highly performant and safe system.
-\end{enumerate}
-
-\section{Operating Environment}
-
-The operating environment is the place of the competition. After previous iterations of the challenge, it is expected to resemble a table with lines drawn on top of it. The robots participating in the challenge are expected to stay on the table without exiting the area close to the line. The robots are required to be completely autonomous during the challenge without receiving any information from outside sources.
-
-\section{Constraints}
-
-There are multiple constraints defined by the rules of the Line Follower Challenge (see the rules [\ref{rules}]). Here we will list the most important ones when making design decisions about the system.
-
-\begin{itemize}
-    \item The objective of the challenge is to finish each run as fast as possible
-    \item The robot shall be completely autonomous
-\end{itemize}
-
-\section{Assumptions and references}
-
-\begin{itemize}
-    \item The challenge will not be excessively long or it will be with a supply of power for the robot and its system
-\end{itemize}
-
-\newpage
-
 
 \chapter{Software validation testing specification design}
 \label{Requirements}
@@ -198,9 +180,6 @@ This test design will test the following features: #4
             Visually verify that the robot has not fallen of the table.
         }
 \end{itemize}
-
-\section{Non Functional Requirements}
-\ref{rules}
 
 
 % \begin{appendices}
